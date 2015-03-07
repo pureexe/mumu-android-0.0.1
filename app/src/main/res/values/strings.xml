@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="facebook_app_id">644049662391131</string>
+    <string name="app_name">มูมู่</string>
+    <string name="teach_mumu">สอนศัพท์ให้มูมู่</string>
+    <string name="signin">เข้าสู่ระบบ</string>
+    <string name="skip">ข้ามไปก่อน</string>
+    <string name="app_concept">มูมู่ แมวน้อยของไอริน</string>
+    <string name="perm_descript">มูมู่ ต้องการเข้าถึงข้อมูลพื้นฐานของคุณเช่น ชื่อและรูปภาพของคุณเพื่อประสบการณ์ที่ดีในการใช้งานมูมู่ ดังนั้นคุณจึงควรเข้าสู่ระบบด้วยเฟสบุ๊ค</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">ตั้งค่า</string>
+    <string name="action_talkonfacebook">คุยผ่านเฟสบุ๊ค</string>
+    <string name="action_about">เกี่ยวกับ</string>
+    <string name="action_history">ประวัติการสอน</string>
+
+</resources>
