@@ -3,7 +3,12 @@
 
     <string name="facebook_app_id">644049662391131</string>
     <string name="app_name">มูมู่</string>
+    <string name="mumu">มูมู่</string>
+    <string name="loginwithfacebook">เข้าสู่ระบบด้วยเฟสบุ๊ค</string>
+    <string name="me">ฉัน</string>
     <string name="teach_mumu">สอนศัพท์ให้มูมู่</string>
+    <string name="teach_input_hint">คำศัพท์</string>
+    <string name="teach_reply_hint">ให้ตอบว่า</string>
     <string name="signin">เข้าสู่ระบบ</string>
     <string name="skip">ข้ามไปก่อน</string>
     <string name="app_concept">มูมู่ แมวน้อยของไอริน</string>

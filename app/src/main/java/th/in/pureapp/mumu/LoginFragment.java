@@ -56,10 +56,10 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onCompleted(GraphUser user, Response response) {
                     SharePrefManager spm = new SharePrefManager(getActivity());
+                    spm.setString("userToken",session.getAccessToken());
                     spm.setString("userName",user.getName());
                     spm.setString("userFirstName",user.getFirstName());
                     spm.setString("userID", user.getId());
-
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new ChatFragment()).commit();
                 }
             });

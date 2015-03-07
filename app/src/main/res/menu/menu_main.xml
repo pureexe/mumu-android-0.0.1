@@ -7,8 +7,12 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_mode_edit_white_24dp"
         />
+    <item android:id="@+id/action_loginwithfacebook" android:title="@string/loginwithfacebook"
+        android:orderInCategory="150" app:showAsAction="never"
+        android:visible="false"
+        />
     <item android:id="@+id/action_history" android:title="@string/action_history"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="175" app:showAsAction="never" />
     <item android:id="@+id/action_about" android:title="@string/action_about"
         android:orderInCategory="200" app:showAsAction="never" />
 

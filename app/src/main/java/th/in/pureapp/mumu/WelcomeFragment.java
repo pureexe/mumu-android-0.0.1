@@ -30,6 +30,7 @@ public class WelcomeFragment extends Fragment {
     SharePrefManager spm;
     public WelcomeFragment() {
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

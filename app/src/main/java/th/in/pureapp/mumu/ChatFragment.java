@@ -70,7 +70,7 @@ public class ChatFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEND){
                     String inp = chatEditText.getText().toString();
-                    if(!inp.equals("")) {
+                    if(!inp.matches("")) {
                         if(spm.getString("userFirstName")==null) {
                             chatAdapter.add(new MessageStructure("ฉัน", inp));
                         }else{
