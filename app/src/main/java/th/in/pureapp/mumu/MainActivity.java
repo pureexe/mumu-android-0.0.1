@@ -137,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_history) {
             if(!(this.getSupportFragmentManager().findFragmentById(R.id.container) instanceof HistoryFragment)) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new HistoryFragment()).addToBackStack(null)
+                        .replace(R.id.container, new HistoryFragment(),"HISTORY").addToBackStack(null)
                         .commit();
             }
             return true;

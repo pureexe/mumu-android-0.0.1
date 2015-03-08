@@ -1,6 +1,6 @@
 package th.in.pureapp.mumu;
 
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -27,7 +27,7 @@ import java.util.Vector;
 /**
  * Created by Pakkapon on 7/3/2558.
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements HistoryEditDialogFragment.HistoryEdit {
     HistoryAdapter historyAdapter;
     boolean notHaveHistory = false;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,11 +80,15 @@ public class HistoryFragment extends Fragment {
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DialogFragment newFragment = new HistoryEditDialogFragment(historyAdapter.getItem(position).getUser(), historyAdapter.getItem(position).getMessage(), historyAdapter, position);
-                newFragment.show(getActivity().getFragmentManager(), "HISTORYEDIT");
+                displayDialog(position);
             }
         });
         return rootView;
+    }
+    public void displayDialog(Integer position){
+        DialogFragment newFragment = new HistoryEditDialogFragment(historyAdapter.getItem(position).getUser(), historyAdapter.getItem(position).getMessage(), position);
+        newFragment.setTargetFragment(this, 0);
+        newFragment.show(getActivity().getSupportFragmentManager(), "HISTORYEDIT");
     }
     public void receiveHistory(String restdata){
             try {
@@ -120,6 +124,13 @@ public class HistoryFragment extends Fragment {
             outState.putParcelable("Chatlog", new ParcelableMessageStructureVector(temp));
         }
     }
+
+    @Override
+    public void onEditedUpdateLable(String before, String after, int position) {
+        historyAdapter.getItem(position).setMessage(after);
+        historyAdapter.notifyDataSetChanged();
+    }
+
     class GetHistory extends AsyncTask<String,Void,String> {
 
              @Override

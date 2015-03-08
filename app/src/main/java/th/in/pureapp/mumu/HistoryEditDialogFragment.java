@@ -1,9 +1,10 @@
 package th.in.pureapp.mumu;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -26,34 +27,38 @@ import java.util.Vector;
  */
 @SuppressLint("ValidFragment")
 public class HistoryEditDialogFragment extends DialogFragment {
+    HistoryEdit callback;
     String pre;
     String post;
-    HistoryAdapter historyAdapter;
     Integer position;
     public HistoryEditDialogFragment(){
     }
-    public HistoryEditDialogFragment(String pr,String po,HistoryAdapter adap,Integer pos){
+    public HistoryEditDialogFragment(String pr,String po,Integer pos){
         pre =pr;
         post = po;
-        historyAdapter = adap;
         position = pos;
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("historyAdapter",new ParcelableHistoryAdapter(historyAdapter));
         outState.putString("pre", pre);
-        outState.putString("post",post);
+        outState.putString("post", post);
         outState.putInt("position",position);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if(savedInstanceState!=null){
-            if(savedInstanceState.getParcelable("historyAdapter")!=null){
-                historyAdapter = ((ParcelableHistoryAdapter)savedInstanceState.getParcelable("historyAdapter")).get();
+        try {
+            callback = (HistoryEdit) getTargetFragment();
+            if(callback == null){
+                Toast.makeText(getActivity(),"Nulled",Toast.LENGTH_LONG).show();
             }
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Calling Fragment must implement HistoryEdit");
+        }
+        if(savedInstanceState!=null){
             pre = savedInstanceState.getString("pre");
             post = savedInstanceState.getString("post");
             position = savedInstanceState.getInt("position");
@@ -84,8 +89,9 @@ public class HistoryEditDialogFragment extends DialogFragment {
                             if(NetworkUtil.isOnline(getActivity())) {
                                 new Edit().execute("input=" + input.getText().toString() + "&reply=" + reply.getText().toString() + "&old=" + post + "&access_token=" + spm.getString("userToken"));
                             }
-                            historyAdapter.getItem(position).setMessage(reply.getText().toString());
-                            historyAdapter.notifyDataSetChanged();
+                            callback.onEditedUpdateLable(post,reply.getText().toString(),position);
+                            //historyAdapter.getItem(position).setMessage(reply.getText().toString());
+                            //historyAdapter.notifyDataSetChanged();
                         }else{
                             Toast.makeText(getActivity(),"ไม่สามารถใช้ช่องว่างได้",Toast.LENGTH_LONG).show();
                         }
@@ -96,8 +102,11 @@ public class HistoryEditDialogFragment extends DialogFragment {
 
         return builder.create();
     }
-    class Edit extends AsyncTask<String,Void,String> {
+    public interface HistoryEdit  {
+        public void onEditedUpdateLable(String before,String after,int position);
+    }
 
+    class Edit extends AsyncTask<String,Void,String> {
              @Override
              protected String doInBackground(String... urls) {
                  return RestCall.edit(urls[0]);
