@@ -1,12 +1,15 @@
 package th.in.pureapp.mumu;
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -14,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -27,7 +31,7 @@ import javax.net.ssl.SSLSession;
 /**
  * Created by Pakkapon on 6/3/2558.
  */
-public class RestCallProvider {
+public class RestCall {
     public static String doGet(String url) {
         String result = "Empty";
         HostnameVerifier hostnameVerifier = new HostnameVerifier() {
@@ -53,8 +57,7 @@ public class RestCallProvider {
         return result;
     }
 
-    public static String teach(String urls) {
-        String[] spl = urls.split("|_&&|");
+    public static String teach(String postdata) {
         String result = "Empty";
         HostnameVerifier hostnameVerifier = new HostnameVerifier() {
             @Override
@@ -64,16 +67,43 @@ public class RestCallProvider {
             }
         };
         try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
-
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-            nameValuePairs.add(new BasicNameValuePair("input",spl[0]));
-            nameValuePairs.add(new BasicNameValuePair("reply",spl[1]));
-            nameValuePairs.add(new BasicNameValuePair("reply",spl[3]));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            result = "OK";
+            URL urls = new URL("https://mumu.irin.in.th/teach");
+            HttpsURLConnection urlConnection = (HttpsURLConnection)urls.openConnection();
+            urlConnection.setHostnameVerifier(hostnameVerifier);
+            urlConnection.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(postdata);
+            writer.flush();
+            InputStream in = urlConnection.getInputStream();
+            result= convertStreamToString(in);
+        } catch (MalformedURLException e) {
+            result = e.getMessage();
+            e.printStackTrace();
+        }catch (IOException e) {
+            result = e.getMessage();
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static String edit(String postdata) {
+        String result = "Empty";
+        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+                return hv.verify("mumu.irin.in.th", session);
+            }
+        };
+        try {
+            URL urls = new URL("https://mumu.irin.in.th/edit");
+            HttpsURLConnection urlConnection = (HttpsURLConnection)urls.openConnection();
+            urlConnection.setHostnameVerifier(hostnameVerifier);
+            urlConnection.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(postdata);
+            writer.flush();
+            InputStream in = urlConnection.getInputStream();
+            result= convertStreamToString(in);
         } catch (MalformedURLException e) {
             result = e.getMessage();
             e.printStackTrace();
@@ -108,5 +138,17 @@ public class RestCallProvider {
             }
         }
         return sb.toString();
+    }
+
+    public  static class Teach extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            return RestCall.teach(urls[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String restdata){
+        }
     }
 }

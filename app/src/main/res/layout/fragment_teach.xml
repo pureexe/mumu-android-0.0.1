@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
@@ -20,7 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="60dp">
             <EditText
-                android:id="@+id/secondLine1"
+                android:id="@+id/TeachInputeditText"
                 android:layout_width="fill_parent"
                 android:gravity="right"
                 android:layout_height="wrap_content"
@@ -32,10 +32,10 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/firstLine1"
+                android:id="@+id/textviewUserName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/secondLine1"
+                android:layout_above="@id/TeachInputeditText"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignWithParentIfMissing="true"
@@ -44,14 +44,14 @@
                 android:layout_marginRight="54dp"
                 android:textSize="16sp" />
             <ImageView
-                android:id="@+id/icon1"
+                android:id="@+id/iconUser"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="-48dip"
                 android:contentDescription="TODO"
-                android:layout_toRightOf="@id/firstLine1"
+                android:layout_toRightOf="@id/textviewUserName"
                 android:src="@drawable/ic_launcher"
                 />
 
@@ -62,7 +62,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             >
 
 
@@ -77,7 +77,7 @@
                 android:src="@drawable/ic_launcher" />
 
             <EditText
-                android:id="@+id/secondLine2"
+                android:id="@+id/TeachReplyeditText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -91,7 +91,7 @@
                 android:id="@+id/firstLine2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/secondLine2"
+                android:layout_above="@id/TeachReplyeditText"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignWithParentIfMissing="true"
@@ -101,15 +101,15 @@
                 android:textSize="16sp" />
 
         </RelativeLayout>
-        <Button
+        <!-- <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:text="สอนศัพท์ใหม่"
             android:id="@+id/buttonSignIn"
             android:layout_gravity="center"
             android:textColor="#FFFFFF"
-            android:background="@drawable/button_front" />
+            android:background="@drawable/button_front" /> -->
     </LinearLayout>
 </RelativeLayout>

@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -55,18 +57,22 @@ public class LoginFragment extends Fragment {
 
                 @Override
                 public void onCompleted(GraphUser user, Response response) {
+
                     SharePrefManager spm = new SharePrefManager(getActivity());
                     spm.setString("userToken",session.getAccessToken());
                     spm.setString("userName",user.getName());
                     spm.setString("userFirstName",user.getFirstName());
                     spm.setString("userID", user.getId());
+
+
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new ChatFragment()).commit();
                 }
             });
             request.executeAsync();
 
         } else if (state.isClosed()) {
-            Toast.makeText(getActivity(),"logout",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"การเข้าสู่ระบบล้มเหลว",Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new ChatFragment()).commit();
         }
     }
     @Override

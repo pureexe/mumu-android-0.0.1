@@ -18,5 +18,6 @@
     <string name="action_talkonfacebook">คุยผ่านเฟสบุ๊ค</string>
     <string name="action_about">เกี่ยวกับ</string>
     <string name="action_history">ประวัติการสอน</string>
+    <string name="nothavehistory">ไม่มีประวัติการสอน</string>
 
 </resources>

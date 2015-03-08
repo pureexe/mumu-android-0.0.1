@@ -4,50 +4,92 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.Toast;
+
+import java.lang.reflect.Field;
 
 
 public class MainActivity extends ActionBarActivity {
 
     ActionBarActivity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
         setContentView(R.layout.activity_main);
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
+        SharePrefManager spm = new SharePrefManager(this);
         if (savedInstanceState == null) {
-            SharePrefManager spm = new SharePrefManager(this);
-            if(!spm.getBool("FirstTime")){
+            if (!spm.getBool("FirstTime")) {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, new WelcomeFragment())
+                        .replace(R.id.container, new WelcomeFragment())
                         .commit();
-            }else{
+            } else {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, new ChatFragment())
+                        .replace(R.id.container, new ChatFragment())
                         .commit();
             }
         }
+        if(NetworkUtil.isOnline(this)&&spm.getString("userToken")!=null){
+            /*new RestCall.Teach().execute("inpit")*/
+            SQLiteDatabase db=  new PrepareUploadDatabaseHelper(this).getWritableDatabase();
+            Cursor cursor =db.rawQuery("SELECT * FROM CONVERSATION WHERE 1",null);
+            if(cursor.moveToFirst()){
+                String access_token = spm.getString("userToken");
+                do{
+                    new RestCall.Teach().execute("input="+cursor.getString(cursor.getColumnIndex("INPUT"))+"&reply="+cursor.getString(cursor.getColumnIndex("REPLY"))+"&=access_token="+access_token);
+                }while(cursor.moveToNext());
+                cursor = db.rawQuery("DELETE FROM CONVERSATION WHERE 1",null);
+            }
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if(new SharePrefManager(this).getString("userFirstName")==null){
+        if (new SharePrefManager(this).getString("userFirstName") == null) {
             menu.findItem(R.id.action_loginwithfacebook).setVisible(true);
         }
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (new SharePrefManager(this).getString("userFirstName") == null) {
+            menu.findItem(R.id.action_loginwithfacebook).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_loginwithfacebook).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -56,10 +98,10 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if(id == R.id.teach){
+        if (id == R.id.teach) {
             SharePrefManager spm = new SharePrefManager(this);
-            if(spm.getString("userFirstName")==null && spm.getBool("LoginTeachWarning") == false){
-                spm.setBool("LoginTeachWarning",true);
+            if (spm.getString("userFirstName") == null && spm.getBool("LoginTeachWarning") == false) {
+                spm.setBool("LoginTeachWarning", true);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("ลงชื่อเข้าใช้")
                         .setMessage("คุณควรลงชื่อเข้าใช้มูมู่ด้วยเฟสบุ๊ค นี่เป็นมาตราการเพื่อความปลอดภับของมูมู่ ไม่ต้องกังวลเราจะไม่แสดงชื่อของคุณให้ผู้อื่นทราบ หากคุณไม่ลงชื่อเข้าใช้คุณยังสามารถสอนมูมู่ได้ต่อไป แต่จะไม่อัปโหลดคำศัพท์ของคุณเข้าสู่ระบบส่วนกลาง");
@@ -73,19 +115,19 @@ public class MainActivity extends ActionBarActivity {
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         DialogFragment newFragment = new TeachDialogFragment();
-                        newFragment.show(activity.getFragmentManager(),"TEACH");
+                        newFragment.show(activity.getFragmentManager(), "TEACH");
                     }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-            }else{
+            } else {
                 DialogFragment newFragment = new TeachDialogFragment();
-                newFragment.show(this.getFragmentManager(),"TEACH");
+                newFragment.show(this.getFragmentManager(), "TEACH");
 
             }
             return true;
         }
-        if(id == R.id.action_loginwithfacebook){
+        if (id == R.id.action_loginwithfacebook) {
             item.setVisible(false);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, new LoginFragment())
@@ -93,12 +135,17 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_history) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, new HistoryFragment())
-                    .commit();
+            if(!(this.getSupportFragmentManager().findFragmentById(R.id.container) instanceof HistoryFragment)) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, new HistoryFragment()).addToBackStack(null)
+                        .commit();
+            }
             return true;
         }
         if (id == R.id.action_about) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new ChatFragment())
+                    .commit();
             return true;
         }
 
