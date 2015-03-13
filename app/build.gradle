@@ -25,7 +25,7 @@ dependencies {
     compile project(':facebook')
     compile 'com.squareup.picasso:picasso:2.5.0'
     //compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-    compile fileTree(dir: 'libs', include: 'sqliteassethelper-2.0.1.jar')
+    //compile fileTree(dir: 'libs', include: 'sqliteassethelper-2.0.1.jar')
     //compile 'com.parse.bolts:bolts-android:1.+'
     //compile fileTree(dir: 'libs', include: 'Parse-*.jar')
     //compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
