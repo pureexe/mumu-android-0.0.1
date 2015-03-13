@@ -58,18 +58,20 @@ public class ChatFragment extends Fragment {
         spm = new SharePrefManager(getActivity());
         if(NetworkUtil.isOnline(getActivity())&&spm.getString("userToken")!=null){
             SQLiteDatabase db=  new PrepareUploadDatabaseHelper(getActivity()).getWritableDatabase();
-            Cursor cursor =db.rawQuery("SELECT * FROM CONVERSATION WHERE 1",null);
+            //Cursor cursor =db.rawQuery("SELECT * FROM CONVERSATION WHERE 1",null);
+            Cursor cursor = db.query("CONVERSATION",new String[]{"INPUT,REPLY"},"1",new String[]{},null,null,"INPUT ASC");
             if(cursor.moveToFirst()){
                 String access_token = spm.getString("userToken");
                 do{
                     new RestCall.Teach().execute("input="+cursor.getString(cursor.getColumnIndex("INPUT"))+"&reply="+cursor.getString(cursor.getColumnIndex("REPLY"))+"&access_token="+access_token);
                 }while(cursor.moveToNext());
-                    db.execSQL("DELETE FROM CONVERSATION WHERE 1");
+                    //db.execSQL("DELETE FROM CONVERSATION WHERE 1");
+                    db.delete("CONVERSATION", "1",new String[]{});
             }
         }
         chatView = (ListView) rootView.findViewById(R.id.listViewChat);
         Vector<MessageStructure> welcomeMessage = new Vector<MessageStructure>();
-        welcomeMessage.add(new MessageStructure("มูมู่","วันนี้มีอะไรอยากพูดกับมูมู่ไหม"));
+        welcomeMessage.add(new MessageStructure(getActivity().getString(R.string.mumu),"วันนี้มีอะไรอยากพูดกับมูมู่ไหม"));
         if(chatAdapter==null) {
             chatAdapter = new MessageAdapter(getActivity(), welcomeMessage);
         }
@@ -95,7 +97,12 @@ public class ChatFragment extends Fragment {
                 if(actionId == EditorInfo.IME_ACTION_SEND){
                     String inp = chatEditText.getText().toString();
                     if(!inp.matches("")) {
-                        sendMsg(inp);
+                        if(inp.substring(0,2).equals("$$")&&inp.indexOf("%%")>-1){
+                            chatEditText.setText("");
+                            Toast.makeText(getActivity(),getActivity().getString(R.string.plzusepenciltoteach),Toast.LENGTH_LONG).show();
+                        }else {
+                            sendMsg(inp);
+                        }
                     }
                     return true;
                 }
@@ -118,30 +125,31 @@ public class ChatFragment extends Fragment {
      }
     public void sendMsg(String inp){
         if(spm.getString("userFirstName")==null) {
-            chatAdapter.add(new MessageStructure("ฉัน", inp));
+            chatAdapter.add(new MessageStructure(getActivity().getString(R.string.me), inp));
         }else{
             chatAdapter.add(new MessageStructure(spm.getString("userFirstName"), inp,spm.getString("userID")));
         }
         chatEditText.setText("");
-        DataBaseAssets mDbHelper = new DataBaseAssets(getActivity());
+        MumuPreload mDbHelper = new MumuPreload(getActivity());
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor cursor =db.rawQuery("SELECT REPLY FROM CONVERSATION WHERE INPUT='"+inp+"' AND REPLY !='-' ORDER BY random() LIMIT 1",null);
+        //Cursor cursor =db.rawQuery("SELECT REPLY FROM CONVERSATION WHERE INPUT='"+inp+"' AND REPLY !='-' ORDER BY random() LIMIT 1",null);
+        Cursor cursor = db.query("CONVERSATION",new String[]{"REPLY"},"INPUT = ?",new String[]{inp},null,null,"random()");
         if (cursor.moveToFirst()){
-            chatAdapter.add(new MessageStructure("มูมู่", cursor.getString(cursor.getColumnIndex("REPLY"))));
+            chatAdapter.add(new MessageStructure(getActivity().getString(R.string.mumu), cursor.getString(cursor.getColumnIndex("REPLY"))));
             chatAdapter.notifyDataSetChanged();
         }else{
             if(NetworkUtil.isOnline(getActivity())) {
                 new GetMumuMessage().execute("https://mumu.irin.in.th/talk/" + inp);
             }else {
-                chatAdapter.add(new MessageStructure("มูมู่","มูมู่ยังไม่รู้จักเลย สอนเพิ่มหน่อย"));
+                chatAdapter.add(new MessageStructure(getActivity().getString(R.string.mumu),"มูมู่ยังไม่รู้จักเลย สอนเพิ่มหน่อย"));
                 chatAdapter.notifyDataSetChanged();
             }
         }
         cursor.close();
     }
-    private void replyMumu(String rep){chatAdapter.add(new MessageStructure("มูมู่",rep));}
+    private void replyMumu(String rep){chatAdapter.add(new MessageStructure(getActivity().getString(R.string.mumu),rep));}
     class GetMumuMessage extends AsyncTask<String,Void,String> {
-
+        // Use getMessage class
         @Override
         protected String doInBackground(String... urls) {
             return RestCall.doGet(urls[0]);

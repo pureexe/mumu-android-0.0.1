@@ -38,7 +38,7 @@ public class TeachDialogFragment extends DialogFragment {
                 Picasso.with(getActivity()).load("https://graph.facebook.com/" + spm.getString("userID") + "/picture?width=192&height=192").into(userImg);
             }
         }
-        builder.setTitle("สอนศัพท์ใหม่")
+        builder.setTitle(getActivity().getString(R.string.teachnewword))
                 .setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         EditText input = (EditText) view.findViewById(R.id.TeachInputeditText);
@@ -47,7 +47,7 @@ public class TeachDialogFragment extends DialogFragment {
                             ContentValues values = new ContentValues();
                             values.put("INPUT", String.valueOf(input.getText()));
                             values.put("REPLY", String.valueOf(reply.getText()));
-                            new DataBaseAssets(getActivity()).getWritableDatabase().insert("CONVERSATION", null, values);
+                            new MumuPreload(getActivity()).getWritableDatabase().insert("CONVERSATION", null, values);
                             SharePrefManager spm = new SharePrefManager(getActivity());
                             if (!NetworkUtil.isOnline(getActivity()) || spm.getString("userFirstName") == null) {
                                 new PrepareUploadDatabaseHelper(getActivity()).getWritableDatabase().insert("CONVERSATION", null, values);

@@ -37,7 +37,7 @@ public class MessageAdapter  extends ArrayAdapter<MessageStructure> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView;
-        if(msgVector.get(position).getUser()=="มูมู่") {
+        if(msgVector.get(position).getUser()==getContext().getString(R.string.mumu)) {
             rowView = inflater.inflate(R.layout.row_left, parent, false);
         }else{
             rowView = inflater.inflate(R.layout.row_right, parent, false);

@@ -10,14 +10,23 @@
     <string name="teach_input_hint">คำศัพท์</string>
     <string name="teach_reply_hint">ให้ตอบว่า</string>
     <string name="signin">เข้าสู่ระบบ</string>
+    <string name="skip_short">ข้าม</string>
     <string name="skip">ข้ามไปก่อน</string>
     <string name="app_concept">มูมู่ แมวน้อยของไอริน</string>
     <string name="perm_descript">มูมู่ ต้องการเข้าถึงข้อมูลพื้นฐานของคุณเช่น ชื่อและรูปภาพของคุณเพื่อประสบการณ์ที่ดีในการใช้งานมูมู่ ดังนั้นคุณจึงควรเข้าสู่ระบบด้วยเฟสบุ๊ค</string>
+    <string name="addword_sigin_warn">คุณควรลงชื่อเข้าใช้มูมู่ด้วยเฟสบุ๊ค นี่เป็นมาตราการเพื่อความปลอดภับของมูมู่ ไม่ต้องกังวลเราจะไม่แสดงชื่อของคุณให้ผู้อื่นทราบ หากคุณไม่ลงชื่อเข้าใช้คุณยังสามารถสอนมูมู่ได้ต่อไป แต่จะไม่อัปโหลดคำศัพท์ของคุณเข้าสู่ระบบส่วนกลาง</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">ตั้งค่า</string>
     <string name="action_talkonfacebook">คุยผ่านเฟสบุ๊ค</string>
     <string name="action_about">เกี่ยวกับ</string>
     <string name="action_history">ประวัติการสอน</string>
     <string name="nothavehistory">ไม่มีประวัติการสอน</string>
-
+    <string name="editword">แก้ไขศัพท์</string>
+    <string name="ok">ตกลง</string>
+    <string name="cantempty">ไม่สามารถเว้นว่างได้</string>
+    <string name="plzconnectnettoload">กรุณาเชื่อมต่ออินเตอร์เน็ต\nเพื่อโหลดข้อมูลเพิ่มเติม</string>
+    <string name="plzconnectnettoloadmore">กรุณาเชื่อมต่ออินเตอร์เน็ตเพื่อโหลดข้อมูลส่วนที่เหลือม</string>
+    <string name="signinfailed">การเข้าสู่ระบบล้มเหลว</string>
+    <string name="teachnewword">สอนศัพท์ใหม่</string>
+    <string name="plzusepenciltoteach">ใช้ปุ่มดินสอเพื่อสอนศัพท์ใหม่</string>
 </resources>

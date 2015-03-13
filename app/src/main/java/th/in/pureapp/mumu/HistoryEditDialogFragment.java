@@ -52,9 +52,6 @@ public class HistoryEditDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         try {
             callback = (HistoryEdit) getTargetFragment();
-            if(callback == null){
-                Toast.makeText(getActivity(),"Nulled",Toast.LENGTH_LONG).show();
-            }
         } catch (ClassCastException e) {
             throw new ClassCastException("Calling Fragment must implement HistoryEdit");
         }
@@ -79,8 +76,8 @@ public class HistoryEditDialogFragment extends DialogFragment {
         input.setText(pre);
         input.setEnabled(false);
         reply.setText(post);
-        builder.setTitle("แก้ไขศัพท์")
-                .setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+        builder.setTitle(getActivity().getString(R.string.editword))
+                .setPositiveButton(getActivity().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if(!reply.getText().toString().matches("")) {
                             ContentValues values = new ContentValues();
@@ -90,10 +87,8 @@ public class HistoryEditDialogFragment extends DialogFragment {
                                 new Edit().execute("input=" + input.getText().toString() + "&reply=" + reply.getText().toString() + "&old=" + post + "&access_token=" + spm.getString("userToken"));
                             }
                             callback.onEditedUpdateLable(post,reply.getText().toString(),position);
-                            //historyAdapter.getItem(position).setMessage(reply.getText().toString());
-                            //historyAdapter.notifyDataSetChanged();
                         }else{
-                            Toast.makeText(getActivity(),"ไม่สามารถใช้ช่องว่างได้",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),getActivity().getString(R.string.cantempty),Toast.LENGTH_LONG).show();
                         }
                     }
                 });

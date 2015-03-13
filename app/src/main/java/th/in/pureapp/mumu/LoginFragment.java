@@ -71,7 +71,7 @@ public class LoginFragment extends Fragment {
             request.executeAsync();
 
         } else if (state.isClosed()) {
-            Toast.makeText(getActivity(),"การเข้าสู่ระบบล้มเหลว",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),getActivity().getString(R.string.signinfailed),Toast.LENGTH_LONG).show();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new ChatFragment()).commit();
         }
     }

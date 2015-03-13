@@ -17,7 +17,7 @@ public class TeachFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_teach, container, false);
-        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("สอนศัพท์ใหม่");
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getActivity().getString(R.string.teachnewword));
 
         return rootView;
     }

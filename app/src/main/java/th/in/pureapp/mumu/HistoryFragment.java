@@ -45,7 +45,8 @@ public class HistoryFragment extends Fragment implements HistoryEditDialogFragme
 
             PrepareUploadDatabaseHelper mDbHelper = new PrepareUploadDatabaseHelper(getActivity());
             SQLiteDatabase db = mDbHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM CONVERSATION WHERE 1 ORDER BY ID DESC", null);
+            //Cursor cursor = db.rawQuery("SELECT * FROM CONVERSATION WHERE 1 ORDER BY ID DESC", null);
+            Cursor cursor = db.query("CONVERSATION",new String[]{"INPUT","REPLY"},"1",new String[]{},null,null,"ID DESC");
             if (cursor.moveToFirst()) {
                 do {
                     historyAdapter.add(new MessageStructure(cursor.getString(cursor.getColumnIndex("INPUT")), cursor.getString(cursor.getColumnIndex("REPLY"))));
@@ -63,9 +64,9 @@ public class HistoryFragment extends Fragment implements HistoryEditDialogFragme
                     if (notHaveHistory) {
                         TextView log = (TextView) rootView.findViewById(R.id.historyNoneMsg);
                         log.setVisibility(View.VISIBLE);
-                        log.setText("กรุณาเชื่อมต่ออินเตอร์เน็ต\nเพื่อโหลดข้อมูลเพิ่มเติม");
+                        log.setText(getActivity().getString(R.string.plzconnectnettoload));
                     } else {
-                        Toast.makeText(getActivity(), "กรุณาเชื่อมต่ออินเตอร์เน็ตเพื่อโหลดข้อมูลส่วนที่เหลือ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getActivity().getString(R.string.plzconnectnettoloadmore), Toast.LENGTH_LONG).show();
                     }
                 }
             } else {

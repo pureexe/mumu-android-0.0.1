@@ -7,18 +7,11 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.Toast;
+
 
 import java.lang.reflect.Field;
 
@@ -29,9 +22,12 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         activity = this;
         setContentView(R.layout.activity_main);
+
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -55,7 +51,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         if(NetworkUtil.isOnline(this)&&spm.getString("userToken")!=null){
-            /*new RestCall.Teach().execute("inpit")*/
             SQLiteDatabase db=  new PrepareUploadDatabaseHelper(this).getWritableDatabase();
             Cursor cursor =db.rawQuery("SELECT * FROM CONVERSATION WHERE 1",null);
             if(cursor.moveToFirst()){
@@ -103,16 +98,16 @@ public class MainActivity extends ActionBarActivity {
             if (spm.getString("userFirstName") == null && spm.getBool("LoginTeachWarning") == false) {
                 spm.setBool("LoginTeachWarning", true);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("ลงชื่อเข้าใช้")
-                        .setMessage("คุณควรลงชื่อเข้าใช้มูมู่ด้วยเฟสบุ๊ค นี่เป็นมาตราการเพื่อความปลอดภับของมูมู่ ไม่ต้องกังวลเราจะไม่แสดงชื่อของคุณให้ผู้อื่นทราบ หากคุณไม่ลงชื่อเข้าใช้คุณยังสามารถสอนมูมู่ได้ต่อไป แต่จะไม่อัปโหลดคำศัพท์ของคุณเข้าสู่ระบบส่วนกลาง");
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setTitle(this.getString(R.string.signin))
+                        .setMessage(this.getString(R.string.addword_sigin_warn));
+                builder.setPositiveButton(this.getString(R.string.signin), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.container, new LoginFragment())
                                 .commit();
                     }
                 });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(this.getString(R.string.skip_short), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         DialogFragment newFragment = new TeachDialogFragment();
                         newFragment.show(activity.getFragmentManager(), "TEACH");
@@ -143,9 +138,8 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_about) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, new ChatFragment())
-                    .commit();
+            android.support.v4.app.DialogFragment newFragment = new AboutDialogFragment();
+            newFragment.show(this.getSupportFragmentManager(), "HISTORYEDIT");
             return true;
         }
 

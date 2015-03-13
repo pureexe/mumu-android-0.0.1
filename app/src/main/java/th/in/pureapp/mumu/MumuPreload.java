@@ -8,11 +8,11 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 /**
  * Created by Pakkapon on 6/3/2558.
  */
-public class DataBaseAssets extends SQLiteAssetHelper {
+public class MumuPreload extends SQLiteAssetHelper {
     private static final String DATABASE_NAME = "mumu.db";
     private static final int DATABASE_VERSION = 1;
 
-    public DataBaseAssets(Context context) {
+    public MumuPreload(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 }
