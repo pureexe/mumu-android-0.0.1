@@ -37,21 +37,21 @@ public class MessageAdapter  extends ArrayAdapter<MessageStructure> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView;
-        if(msgVector.get(position).getUser()==getContext().getString(R.string.mumu)) {
+        if(msgVector.get(position).getUser().equals(getContext().getString(R.string.mumu))) {
             rowView = inflater.inflate(R.layout.row_left, parent, false);
         }else{
             rowView = inflater.inflate(R.layout.row_right, parent, false);
         }
-        TextView firstline = (TextView) rowView.findViewById(R.id.firstLine);
-        TextView secondline = (TextView) rowView.findViewById(R.id.secondLine);
-        if(msgVector.get(position).getId()!=null){
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            if(NetworkUtil.isOnline(context)) {
-                Picasso.with(context).load("https://graph.facebook.com/" + msgVector.get(position).getId() + "/picture?width=192&height=192").into(imageView);
-            }
-        }
-        firstline.setText(msgVector.get(position).getUser());
-        secondline.setText(msgVector.get(position).getMessage());
+        TextView chatMessage = (TextView) rowView.findViewById(R.id.chatMessage);
+        chatMessage.setText(msgVector.get(position).getMessage());
         return rowView;
+    }
+    @Override
+    public boolean areAllItemsEnabled(){
+        return false;
+    }
+    @Override
+    public boolean isEnabled(int position){
+        return false;
     }
 }

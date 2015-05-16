@@ -78,7 +78,7 @@ public class ChatFragment extends Fragment {
         chatView.setAdapter(chatAdapter);
         chatView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         fbUserID = spm.getString("userID");
-        chatEditText = (EditText) rootView.findViewById(R.id.editTextChat);
+        chatEditText = (EditText) rootView.findViewById(R.id.chatInput);
         chatEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
         ImageView imageViewSend = (ImageView)rootView.findViewById(R.id.imageViewSend);
         imageViewSend.setOnClickListener(new View.OnClickListener(){
@@ -86,7 +86,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String inp = chatEditText.getText().toString();
-                if(!inp.matches("")) {
+                if(inp.length()>0) {
                     sendMsg(inp);
                 }
             }
@@ -96,7 +96,7 @@ public class ChatFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEND){
                     String inp = chatEditText.getText().toString();
-                    if(!inp.matches("")) {
+                    if(inp.length()>0) {
                         if(inp.substring(0,2).equals("$$")&&inp.indexOf("%%")>-1){
                             chatEditText.setText("");
                             Toast.makeText(getActivity(),getActivity().getString(R.string.plzusepenciltoteach),Toast.LENGTH_LONG).show();
